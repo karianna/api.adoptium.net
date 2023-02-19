@@ -194,7 +194,7 @@
             <dependency>
                 <groupId>de.flapdoodle.embed</groupId>
                 <artifactId>de.flapdoodle.embed.mongo</artifactId>
-                <version>2.2.0</version>
+                <version>3.5.4</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -233,7 +233,6 @@
                 <artifactId>jooq</artifactId>
                 <version>3.17.8</version>
             </dependency>
-            <!-- TODO 2.0.6 is out -->
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
@@ -255,7 +254,7 @@
                 <artifactId>opentelemetry-api</artifactId>
                 <version>1.23.1</version>
             </dependency>
-            <!-- TODO Update to 4.0.0 Final now -->
+            <!-- TODO Update to 4.0.0 Final once Quarkus itself supports  -->
             <dependency>
                 <groupId>org.jboss.weld</groupId>
                 <artifactId>weld-junit5</artifactId>
@@ -265,7 +264,7 @@
             <dependency>
                 <groupId>org.jboss.weld.se</groupId>
                 <artifactId>weld-se-core</artifactId>
-                <version>3.1.5.Final</version>
+                <version>3.1.9.Final</version>
                 <exclusions>
                     <exclusion>
                         <groupId>jakarta.el</groupId>
@@ -278,10 +277,18 @@
                 </exclusions>
             </dependency>
             <!-- TODO swap to Jakarta EE once Quarkus fully moves over -->
+            <!--
             <dependency>
                 <groupId>javax.enterprise</groupId>
                 <artifactId>cdi-api</artifactId>
                 <version>2.0</version>
+            </dependency>
+            -->
+            <!-- TODO Quarkus seems to have this built in, do we need to add it ourselves? -->
+            <dependency>
+                <groupId>jakarta.enterprise</groupId>
+                <artifactId>jakarta.enterprise.cdi-api</artifactId>
+                <version>2.0.2</version>
             </dependency>
             <dependency>
                 <groupId>org.codehaus.groovy</groupId>

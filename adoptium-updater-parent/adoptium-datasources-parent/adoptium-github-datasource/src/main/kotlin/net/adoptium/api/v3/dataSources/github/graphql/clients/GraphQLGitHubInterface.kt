@@ -3,7 +3,7 @@ package net.adoptium.api.v3.dataSources.github.graphql.clients
 import com.expediagroup.graphql.client.types.GraphQLClientRequest
 import com.expediagroup.graphql.client.types.GraphQLClientResponse
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
-import io.ktor.client.features.*
+import io.ktor.client.plugins.*
 import io.ktor.http.*
 import kotlinx.coroutines.delay
 import net.adoptium.api.v3.TimeSource
@@ -185,7 +185,7 @@ abstract class GraphQLGitHubInterface(
                 }
 
             } catch (e: MissingKotlinParameterException) {
-                return null;
+                return null
             } catch (e: Exception) {
                 LOGGER.error("Query failed", e)
                 throw e

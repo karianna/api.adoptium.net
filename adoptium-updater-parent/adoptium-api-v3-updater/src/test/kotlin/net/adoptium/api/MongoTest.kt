@@ -2,7 +2,7 @@ package net.adoptium.api
 
 import de.flapdoodle.embed.mongo.MongodExecutable
 import de.flapdoodle.embed.mongo.MongodStarter
-import de.flapdoodle.embed.mongo.config.MongodConfigBuilder
+import de.flapdoodle.embed.mongo.config.MongodConfig
 import de.flapdoodle.embed.mongo.config.Net
 import de.flapdoodle.embed.mongo.distribution.Version
 import de.flapdoodle.embed.process.runtime.Network
@@ -37,8 +37,9 @@ abstract class MongoTest {
 
             val bindIp = "localhost"
             val port = Random.nextInt(10000, 16000)
-            val mongodConfig = MongodConfigBuilder()
-                .version(Version.V4_0_2)
+            val mongodConfig = MongodConfig.builder()
+                // TODO Check version we're using in Prod
+                .version(Version.V4_4_17)
                 .net(Net(bindIp, port, Network.localhostIsIPv6()))
                 .build()
 

@@ -8,7 +8,6 @@ import java.util.function.Predicate
 
 class Release {
 
-
     @Schema(example = "VXNlci0xMA==")
     val id: String
 
