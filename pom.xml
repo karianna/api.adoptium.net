@@ -9,14 +9,14 @@
 
     <!-- This throws a warning, but the versions plugin does actually require it if you're checking plugin versions -->
     <prerequisites>
-        <maven>3.8.6</maven>
+        <maven>3.9.0</maven>
     </prerequisites>
 
     <properties>
         <jacoco.version>0.8.8</jacoco.version>
         <jdk.version>17</jdk.version>
         <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
-        <kotlin.version>1.7.21</kotlin.version>
+        <kotlin.version>1.8.10</kotlin.version>
         <coroutine.version>1.6.4</coroutine.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -24,19 +24,19 @@
         <maven.compiler.testTarget>17</maven.compiler.testTarget>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <quarkus.version>2.14.0.Final</quarkus.version>
-        <rest-assured.version>5.2.0</rest-assured.version>
-        <surefire-plugin.version>3.0.0-M7</surefire-plugin.version>
-        <jackson.version>2.14.0</jackson.version>
-        <kmongo.version>4.7.2</kmongo.version>
-        <maven-dependency-plugin.version>3.3.0</maven-dependency-plugin.version>
+        <quarkus.version>2.15.3.Final</quarkus.version>
+        <rest-assured.version>5.3.0</rest-assured.version>
+        <surefire-plugin.version>3.0.0-M9</surefire-plugin.version>
+        <jackson.version>2.14.2</jackson.version>
+        <kmongo.version>4.8.0</kmongo.version>
+        <maven-dependency-plugin.version>3.5.0</maven-dependency-plugin.version>
         <spotbugs-maven-plugin.version>4.7.3.0</spotbugs-maven-plugin.version>
         <maven-jxr-plugin.version>3.3.0</maven-jxr-plugin.version>
-        <maven-pmd-plugin.version>3.19.0</maven-pmd-plugin.version>
-        <maven-project-info-reports-plugin.version>3.4.1</maven-project-info-reports-plugin.version>
+        <maven-pmd-plugin.version>3.20.0</maven-pmd-plugin.version>
+        <maven-project-info-reports-plugin.version>3.4.2</maven-project-info-reports-plugin.version>
         <apache-rat-plugin.version>0.15</apache-rat-plugin.version>
         <jdepend-maven-plugin.version>2.0</jdepend-maven-plugin.version>
-        <versions-maven-plugin.version>2.13.0</versions-maven-plugin.version>
+        <versions-maven-plugin.version>2.14.2</versions-maven-plugin.version>
     </properties>
 
     <modules>
@@ -92,7 +92,7 @@
             <dependency>
                 <groupId>io.mockk</groupId>
                 <artifactId>mockk-jvm</artifactId>
-                <version>1.13.2</version>
+                <version>1.13.4</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -142,12 +142,12 @@
             <dependency>
                 <groupId>org.apache.maven</groupId>
                 <artifactId>maven-artifact</artifactId>
-                <version>3.8.6</version>
+                <version>3.9.0</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.microprofile.openapi</groupId>
                 <artifactId>microprofile-openapi-api</artifactId>
-                <version>3.0</version>
+                <version>3.1</version>
             </dependency>
             <!-- TODO 2.0.1 is the latest but moves to jakarta.ee for internal packages -->
             <dependency>
@@ -209,12 +209,12 @@
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpcore</artifactId>
-                <version>4.4.15</version>
+                <version>4.4.16</version>
             </dependency>
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
-                <version>3.23.1</version>
+                <version>3.24.2</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -231,13 +231,13 @@
             <dependency>
                 <groupId>org.jooq</groupId>
                 <artifactId>jooq</artifactId>
-                <version>3.17.5</version>
+                <version>3.17.8</version>
             </dependency>
-            <!-- TODO 2.0.3 is out -->
+            <!-- TODO 2.0.6 is out -->
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
-                <version>1.7.36</version>
+                <version>2.0.6</version>
             </dependency>
             <dependency>
                 <groupId>org.skyscreamer</groupId>
@@ -253,7 +253,7 @@
             <dependency>
                 <groupId>io.opentelemetry</groupId>
                 <artifactId>opentelemetry-api</artifactId>
-                <version>1.20.0</version>
+                <version>1.23.1</version>
             </dependency>
             <!-- TODO Update to 4.0.0 Final now -->
             <dependency>
@@ -286,7 +286,7 @@
             <dependency>
                 <groupId>org.codehaus.groovy</groupId>
                 <artifactId>groovy</artifactId>
-                <version>3.0.13</version>
+                <version>3.0.15</version>
             </dependency>
             <dependency>
                 <groupId>io.quarkiverse.logging.logback</groupId>
@@ -308,10 +308,9 @@
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter</artifactId>
-                <version>5.9.1</version>
+                <version>5.9.2</version>
                 <scope>test</scope>
             </dependency>
-            <!-- TODO Now at 3.0.1 -->
             <dependency>
                 <groupId>io.smallrye</groupId>
                 <artifactId>smallrye-open-api-core</artifactId>
@@ -334,13 +333,13 @@
                 <artifactId>bcpg-jdk15on</artifactId>
                 <version>1.70</version>
             </dependency>
-            <!-- TODO at 1.4.4 -->
+            <!-- TODO at 1.4.5 -->
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-core</artifactId>
                 <version>1.2.11</version>
             </dependency>
-            <!-- TODO at 1.4.4 -->
+            <!-- TODO at 1.4.5 -->
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
@@ -349,7 +348,7 @@
             <dependency>
                 <groupId>org.litote.kmongo</groupId>
                 <artifactId>kmongo-id-jackson</artifactId>
-                <version>4.7.2</version>
+                <version>4.8.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -430,9 +429,8 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>3.1.0</version>
                 </plugin>
-                <!-- TODO Moving to 3.0.0 invokes a stricter parser that causes some build blockers due to Quarkus dependencies -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-enforcer-plugin</artifactId>
@@ -453,7 +451,7 @@
                     <artifactId>maven-help-plugin</artifactId>
                     <version>3.3.0</version>
                 </plugin>
-                <!-- TODO Moving to 3.0.1 created a multi-module packaging issue -->
+                <!-- TODO Moving to 3.x+ creates a multi-module packaging issue which we need to resolve -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-install-plugin</artifactId>
@@ -467,7 +465,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.4.1</version>
+                    <version>3.5.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -508,7 +506,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>3.0.0-M6</version>
+                    <version>3.0.0-M7</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -523,7 +521,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
-                    <version>4.0.0-M3</version>
+                    <version>4.0.0-M5</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -632,6 +630,7 @@
                     <artifactId>kotlin-maven-plugin</artifactId>
                     <version>${kotlin.version}</version>
                 </plugin>
+                <!-- TODO moving this to 6.3.0 causes a smallrye incompatibility -->
                 <plugin>
                     <groupId>org.openapitools</groupId>
                     <artifactId>openapi-generator-maven-plugin</artifactId>
@@ -640,7 +639,7 @@
                 <plugin>
                     <groupId>org.pitest</groupId>
                     <artifactId>pitest-maven</artifactId>
-                    <version>1.9.9</version>
+                    <version>1.11.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -657,7 +656,7 @@
                                     <uniqueVersions>true</uniqueVersions>
                                 </dependencyConvergence>
                                 <requireMavenVersion>
-                                    <version>3.8.6</version>
+                                    <version>3.9.0</version>
                                 </requireMavenVersion>
                             </rules>
                         </configuration>
