@@ -190,7 +190,7 @@
             </dependency>
             <!-- Explicitly adding this because Maven can't see it via the kmongo dep in
              adoptium-api-v3-updater pom file. Why? Nobody knows -->
-            <!-- Latest version at 3.4.6 but this changes how config of mongo works -->
+            <!-- TODO 4.x series changes APIs so will need a refactor -->
             <dependency>
                 <groupId>de.flapdoodle.embed</groupId>
                 <artifactId>de.flapdoodle.embed.mongo</artifactId>
@@ -261,6 +261,7 @@
                 <version>2.0.2.Final</version>
                 <scope>test</scope>
             </dependency>
+            <!-- TODO Update to the 4x or 5x series when Quarkus moves to that -->
             <dependency>
                 <groupId>org.jboss.weld.se</groupId>
                 <artifactId>weld-se-core</artifactId>
@@ -276,14 +277,6 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-            <!-- TODO swap to Jakarta EE once Quarkus fully moves over -->
-            <!--
-            <dependency>
-                <groupId>javax.enterprise</groupId>
-                <artifactId>cdi-api</artifactId>
-                <version>2.0</version>
-            </dependency>
-            -->
             <!-- TODO Quarkus seems to have this built in, do we need to add it ourselves? -->
             <dependency>
                 <groupId>jakarta.enterprise</groupId>
@@ -355,7 +348,7 @@
             <dependency>
                 <groupId>org.litote.kmongo</groupId>
                 <artifactId>kmongo-id-jackson</artifactId>
-                <version>4.8.0</version>
+                <version>${kmongo.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
