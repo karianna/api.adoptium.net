@@ -36,7 +36,7 @@
         <maven-project-info-reports-plugin.version>3.4.2</maven-project-info-reports-plugin.version>
         <apache-rat-plugin.version>0.15</apache-rat-plugin.version>
         <jdepend-maven-plugin.version>2.0</jdepend-maven-plugin.version>
-        <versions-maven-plugin.version>2.14.2</versions-maven-plugin.version>
+        <versions-maven-plugin.version>2.15.0</versions-maven-plugin.version>
     </properties>
 
     <modules>
@@ -401,7 +401,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.4.2</version>
+                    <version>3.5.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -411,7 +411,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.10.1</version>
+                    <version>3.11.0</version>
                     <configuration>
                         <source>${maven.compiler.source}</source>
                         <testSource>${maven.compiler.testSource}</testSource>
