@@ -21,6 +21,8 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import java.time.format.DateTimeFormatter
 import jakarta.ws.rs.BadRequestException
+import net.adoptium.api.testDoubles.UpdatableVersionSupplierStub
+import net.adoptium.api.v3.models.ReleaseType
 
 @ExtendWith(value = [DbExtension::class])
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -46,7 +48,7 @@ class DownloadStatsPathTest : FrontendTest() {
                 createGithubData()
             )
 
-            val downloadStatsResource = DownloadStatsResource(apiDataStore, DownloadStatsInterface(persistance))
+            val downloadStatsResource = DownloadStatsResource(apiDataStore, DownloadStatsInterface(persistance, UpdatableVersionSupplierStub()))
             downloadStatsResource
         }
     }
@@ -157,14 +159,14 @@ class DownloadStatsPathTest : FrontendTest() {
 
     @Test
     fun totalVersionReturnsSaneData() {
-        val stats = downloadStatsResource.getTotalDownloadStats(8)
+        val stats = downloadStatsResource.getTotalDownloadStats(8, listOf(ReleaseType.ga))
         assertTrue { return@assertTrue stats.isNotEmpty() && !stats.containsValue(0L) }
     }
 
     @Test
     fun badTotalVersionReturnsSaneData() {
         assertThrows<BadRequestException> {
-            downloadStatsResource.getTotalDownloadStats(101)
+            downloadStatsResource.getTotalDownloadStats(101, listOf(ReleaseType.ga))
         }
     }
 
@@ -174,10 +176,11 @@ class DownloadStatsPathTest : FrontendTest() {
             val releases = getReleases()
 
             val release = releases
+                .filter { it.release_type == ReleaseType.ga }
                 .filter { it.vendor == Vendor.getDefault() }
                 .first()
 
-            val stats = downloadStatsResource.getTotalDownloadStatsForTag(release.version_data.major, release.release_name)
+            val stats = downloadStatsResource.getTotalDownloadStatsForTag(release.version_data.major, release.release_name, listOf(ReleaseType.ga))
             assertTrue { return@assertTrue stats.isNotEmpty() && !stats.containsValue(0L) }
         }
     }
@@ -185,7 +188,7 @@ class DownloadStatsPathTest : FrontendTest() {
     @Test
     fun badTotalTagReturnsSaneData() {
         assertThrows<BadRequestException> {
-            downloadStatsResource.getTotalDownloadStatsForTag(101, "fooBar")
+            downloadStatsResource.getTotalDownloadStatsForTag(101, "fooBar", listOf(ReleaseType.ga))
         }
     }
 

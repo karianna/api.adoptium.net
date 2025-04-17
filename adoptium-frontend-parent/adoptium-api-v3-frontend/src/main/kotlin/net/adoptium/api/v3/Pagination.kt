@@ -6,7 +6,7 @@ import jakarta.ws.rs.core.UriInfo
 import kotlin.math.min
 
 object Pagination {
-    private const val defaultPageSizeNum = 10
+    const val defaultPageSizeNum = 10
     private const val maxPageSizeNum = 20
     const val largerPageSizeNum = 50
     const val defaultPageSize = defaultPageSizeNum.toString()
@@ -59,7 +59,7 @@ object Pagination {
 
         return try {
 
-            var totalPages: Int? = null;
+            var totalPages: Int? = null
 
             val chunked = if (showPageCount) {
                 val releasesList = releases.toList()

@@ -5,7 +5,9 @@ import jakarta.enterprise.context.ApplicationScoped
 import jakarta.enterprise.inject.Alternative
 import net.adoptium.api.v3.dataSources.APIDataStore
 import net.adoptium.api.v3.dataSources.models.AdoptRepos
+import net.adoptium.api.v3.dataSources.persitence.mongo.UpdatedInfo
 import net.adoptium.api.v3.models.ReleaseInfo
+import java.time.ZonedDateTime
 
 @Priority(1)
 @Alternative
@@ -52,8 +54,20 @@ open class ApiDataStoreStub : APIDataStore {
         )
     }
 
-    override fun loadDataFromDb(forceUpdate: Boolean): AdoptRepos {
+    override fun loadDataFromDb(forceUpdate: Boolean, log:Boolean): AdoptRepos {
         // nop
         return adoptRepo
+    }
+
+    override fun getUpdateInfo(): UpdatedInfo {
+        return UpdatedInfo(
+            ZonedDateTime.now(),
+            "1234567890",
+            123
+        )
+    }
+
+    override suspend fun isConnectedToDb(): Boolean {
+        return true
     }
 }

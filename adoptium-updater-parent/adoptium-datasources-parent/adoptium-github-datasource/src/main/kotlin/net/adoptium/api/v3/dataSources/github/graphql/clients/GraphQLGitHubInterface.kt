@@ -2,8 +2,8 @@ package net.adoptium.api.v3.dataSources.github.graphql.clients
 
 import com.expediagroup.graphql.client.types.GraphQLClientRequest
 import com.expediagroup.graphql.client.types.GraphQLClientResponse
-import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
-import io.ktor.client.features.*
+import com.fasterxml.jackson.databind.exc.MismatchedInputException
+import io.ktor.client.plugins.*
 import io.ktor.http.*
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
@@ -174,7 +174,7 @@ open class GraphQLGitHubInterface @Inject constructor(
 
                 LOGGER.info("Retrying ${retryCount++}")
                 delay((TimeUnit.SECONDS.toMillis(5) * retryCount))
-            } catch (e: ClientRequestException) {
+            } catch (e: ResponseException) {
                 if (e.response.status == HttpStatusCode.Forbidden ||
                     e.response.status == HttpStatusCode.BadGateway ||
                     e.response.status == HttpStatusCode.ServiceUnavailable ||
@@ -187,8 +187,8 @@ open class GraphQLGitHubInterface @Inject constructor(
                     throw Exception("Unexpected return type ${e.response.status}")
                 }
 
-            } catch (e: MissingKotlinParameterException) {
-                return null;
+            } catch (e: MismatchedInputException) {
+                return null
             } catch (e: Exception) {
                 LOGGER.error("Query failed", e)
                 throw e

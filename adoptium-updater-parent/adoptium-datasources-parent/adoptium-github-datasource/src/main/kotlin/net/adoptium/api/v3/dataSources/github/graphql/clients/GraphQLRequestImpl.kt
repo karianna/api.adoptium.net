@@ -8,24 +8,17 @@ import io.ktor.client.*
 import jakarta.enterprise.context.ApplicationScoped
 import net.adoptium.api.v3.dataSources.UpdaterJsonMapper
 import net.adoptium.api.v3.dataSources.github.GitHubAuth
+import net.adoptium.api.v3.dataSources.github.GitHubAuth.AuthInfo
 import java.net.URL
 
 @ApplicationScoped
 open class GraphQLRequestImpl : GraphQLRequest {
 
     private val client: GraphQLKtorClient
-    private val httpClient: HttpClient
+    private val httpClient: HttpClient = HttpClient()
     val BASE_URL = "https://api.github.com/graphql"
-    private val TOKEN: String
 
     init {
-        val token = GitHubAuth.readToken()
-        if (token == null) {
-            throw IllegalStateException("No token provided")
-        } else {
-            TOKEN = token
-        }
-        httpClient = HttpClient()
         client = GraphQLKtorClient(
             url = URL(BASE_URL),
             httpClient = httpClient,
@@ -34,8 +27,9 @@ open class GraphQLRequestImpl : GraphQLRequest {
     }
 
     override suspend fun <T : Any> request(query: GraphQLClientRequest<T>): GraphQLClientResponse<T> {
+        val authInfo: AuthInfo = GitHubAuth.getAuthenticationToken()
         return client.execute(query) {
-            headers.append("Authorization", "Bearer $TOKEN")
+            headers.append("Authorization", "Bearer ${authInfo.token}")
         }
     }
 }

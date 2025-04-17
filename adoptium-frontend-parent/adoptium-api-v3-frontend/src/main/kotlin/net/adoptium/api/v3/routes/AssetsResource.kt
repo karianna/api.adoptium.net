@@ -1,14 +1,30 @@
 package net.adoptium.api.v3.routes
 
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.inject.Inject
+import jakarta.ws.rs.BadRequestException
+import jakarta.ws.rs.DefaultValue
+import jakarta.ws.rs.GET
+import jakarta.ws.rs.NotFoundException
+import jakarta.ws.rs.Path
+import jakarta.ws.rs.PathParam
+import jakarta.ws.rs.Produces
+import jakarta.ws.rs.QueryParam
+import jakarta.ws.rs.ServerErrorException
+import jakarta.ws.rs.core.Context
+import jakarta.ws.rs.core.MediaType
+import jakarta.ws.rs.core.Response
+import jakarta.ws.rs.core.UriInfo
 import net.adoptium.api.v3.OpenApiDocs
 import net.adoptium.api.v3.Pagination.defaultPageSize
+import net.adoptium.api.v3.Pagination.defaultPageSizeNum
 import net.adoptium.api.v3.Pagination.getResponseForPage
 import net.adoptium.api.v3.Pagination.maxPageSize
 import net.adoptium.api.v3.dataSources.APIDataStore
 import net.adoptium.api.v3.dataSources.SortMethod
 import net.adoptium.api.v3.dataSources.SortOrder
 import net.adoptium.api.v3.filters.BinaryFilter
-import net.adoptium.api.v3.filters.ReleaseFilter
+import net.adoptium.api.v3.filters.ReleaseFilterFactory
 import net.adoptium.api.v3.models.Architecture
 import net.adoptium.api.v3.models.BinaryAssetView
 import net.adoptium.api.v3.models.CLib
@@ -29,20 +45,6 @@ import org.eclipse.microprofile.openapi.annotations.parameters.Parameter
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses
 import org.eclipse.microprofile.openapi.annotations.tags.Tag
-import jakarta.enterprise.context.ApplicationScoped
-import jakarta.inject.Inject
-import jakarta.ws.rs.BadRequestException
-import jakarta.ws.rs.GET
-import jakarta.ws.rs.NotFoundException
-import jakarta.ws.rs.Path
-import jakarta.ws.rs.PathParam
-import jakarta.ws.rs.Produces
-import jakarta.ws.rs.QueryParam
-import jakarta.ws.rs.ServerErrorException
-import jakarta.ws.rs.core.Context
-import jakarta.ws.rs.core.MediaType
-import jakarta.ws.rs.core.Response
-import jakarta.ws.rs.core.UriInfo
 
 @Tag(name = "Assets")
 @Path("/v3/assets/")
@@ -52,7 +54,8 @@ class AssetsResource
 @Inject
 constructor(
     private val apiDataStore: APIDataStore,
-    private val releaseEndpoint: ReleaseEndpoint
+    private val releaseEndpoint: ReleaseEndpoint,
+    private val releaseFilterFactory: ReleaseFilterFactory
 ) {
 
     @GET
@@ -74,14 +77,14 @@ constructor(
     fun get(
         @Parameter(name = "release_type", description = OpenApiDocs.RELEASE_TYPE, required = true)
         @PathParam("release_type")
-        release_type: ReleaseType?,
+        release_type: ReleaseType,
 
         @Parameter(
             name = "feature_version", description = OpenApiDocs.FEATURE_RELEASE, required = true,
-            schema = Schema(defaultValue = "8", type = SchemaType.INTEGER)
+            schema = Schema(example = "8", type = SchemaType.INTEGER)
         )
         @PathParam("feature_version")
-        version: Int?,
+        version: Int,
 
         @Parameter(name = "os", description = "Operating System", required = false)
         @QueryParam("os")
@@ -128,14 +131,16 @@ constructor(
             schema = Schema(defaultValue = defaultPageSize, maximum = maxPageSize, type = SchemaType.INTEGER), required = false
         )
         @QueryParam("page_size")
-        pageSize: Int?,
+        @DefaultValue(defaultPageSize)
+        pageSize: Int,
 
         @Parameter(
             name = "page", description = "Pagination page number",
             schema = Schema(defaultValue = "0", type = SchemaType.INTEGER), required = false
         )
         @QueryParam("page")
-        page: Int?,
+        @DefaultValue("0")
+        page: Int,
 
         @Parameter(name = "sort_order", description = "Result sort order", required = false)
         @QueryParam("sort_order")
@@ -156,7 +161,7 @@ constructor(
         val releaseSortMethod = sortMethod ?: SortMethod.DEFAULT
         val vendorNonNull = vendor ?: Vendor.getDefault()
 
-        val releaseFilter = ReleaseFilter(releaseType = release_type, featureVersion = version, vendor = vendorNonNull, jvm_impl = jvm_impl)
+        val releaseFilter = releaseFilterFactory.createFilter(releaseType = release_type, featureVersion = version, vendor = vendorNonNull, jvm_impl = jvm_impl)
         val binaryFilter = BinaryFilter(os, arch, image_type, jvm_impl, heap_size, project, before, cLib)
         val repos = apiDataStore.getAdoptRepos().getFeatureRelease(version!!)
 
@@ -189,13 +194,13 @@ constructor(
         ]
     )
     fun get(
-        @Parameter(name = "vendor", description = OpenApiDocs.VENDOR, required = false)
+        @Parameter(name = "vendor", description = OpenApiDocs.VENDOR, required = true)
         @PathParam("vendor")
-        vendor: Vendor?,
+        vendor: Vendor,
 
         @Parameter(name = "release_name", description = "Name of the release i.e ", required = true)
         @PathParam("release_name")
-        releaseName: String?,
+        releaseName: String,
 
         @Parameter(name = "os", description = "Operating System", required = false)
         @QueryParam("os")
@@ -233,7 +238,7 @@ constructor(
             throw BadRequestException("Must provide a vendor")
         }
 
-        val releaseFilter = ReleaseFilter(vendor = vendor, releaseName = releaseName.trim(), jvm_impl = jvm_impl)
+        val releaseFilter = releaseFilterFactory.createFilter(vendor = vendor, releaseName = releaseName.trim(), jvm_impl = jvm_impl)
         val binaryFilter = BinaryFilter(os, arch, image_type, jvm_impl, heap_size, project, null, cLib)
 
         val releases = apiDataStore
@@ -327,6 +332,7 @@ constructor(
             schema = Schema(defaultValue = defaultPageSize, maximum = maxPageSize, type = SchemaType.INTEGER), required = false
         )
         @QueryParam("page_size")
+        @DefaultValue(defaultPageSize)
         pageSize: Int?,
 
         @Parameter(
@@ -334,6 +340,7 @@ constructor(
             schema = Schema(defaultValue = "0", type = SchemaType.INTEGER), required = false
         )
         @QueryParam("page")
+        @DefaultValue("0")
         page: Int?,
 
         @Parameter(name = "sort_order", description = "Result sort order", required = false)
@@ -354,7 +361,8 @@ constructor(
             schema = Schema(defaultValue = "false", type = SchemaType.BOOLEAN)
         )
         @QueryParam("semver")
-        semver: Boolean?,
+        @DefaultValue("false")
+        semver: Boolean,
 
         @Context
         uriInfo: UriInfo,
@@ -392,7 +400,7 @@ constructor(
 
         @Parameter(
             name = "feature_version", description = OpenApiDocs.FEATURE_RELEASE, required = true,
-            schema = Schema(defaultValue = "8", type = SchemaType.INTEGER)
+            schema = Schema(example = "8", type = SchemaType.INTEGER)
         )
         @PathParam("feature_version")
         version: Int,
@@ -419,7 +427,7 @@ constructor(
 
         ): List<BinaryAssetView> {
         val binaryVendor = vendor ?: Vendor.getDefault()
-        val releaseFilter = ReleaseFilter(ReleaseType.ga, featureVersion = version, vendor = binaryVendor, jvm_impl = jvm_impl)
+        val releaseFilter = releaseFilterFactory.createFilter(ReleaseType.ga, featureVersion = version, vendor = binaryVendor, jvm_impl = jvm_impl)
         val binaryFilter = BinaryFilter(os, arch, image_type, jvm_impl, null, null)
         val releases = apiDataStore
             .getAdoptRepos()
